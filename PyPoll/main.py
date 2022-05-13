@@ -6,7 +6,7 @@ import csv
 total_votes = 0
 candidate = []
 candidate_votes = {}
-votes = ""
+votes = 0
 percentage = 0
 most_votes = 0
 winner = ""
