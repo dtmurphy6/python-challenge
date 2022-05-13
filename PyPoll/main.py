@@ -1,18 +1,16 @@
 #import modules
+from inspect import BoundArguments
 import os
 import csv
 
 #variables
-votes = []
 total_votes = 0
-candidate = ""
-unique_candidates = []
+candidate = []
 candidate_votes = {}
-counties = []
-county_votes = {}
-winning_candidate = ""
-winning_count = 0
-winning_percentage = 0
+votes = ""
+percentage = 0
+most_votes = 0
+winner = ""
 
 #set CSV file path
 csvpath = os.path.join('Resources', 'election_data.csv')
@@ -26,16 +24,48 @@ with open(csvpath) as csvfile:
 
     #add votes to votes list, track unique candidates
     for row in csvreader:
-        votes.append(row[0])
-        candidate = row[2]
-        counties.append(row[1])
+        total_votes += 1
 
-        #determine if candidate is unique and create a votes dictionary entry for that candidate
-        if candidate not in unique_candidates:
-            unique_candidates.append(candidate)
-            candidate_votes[candidate] = 0
+        #determine if candidate is unique and create a candidate votes dictionary entry for that candidate
+        if row[2] not in candidate:
+            candidate.append(row[2])
+            candidate_votes[row[2]] = 0
+        
+        #add a vote to current candidate's count
+        candidate_votes[row[2]] += 1
 
-        candidate_votes[candidate] += 1
+#print output            
+print("Election Results")
+print("-------------------------")
+print("Total Votes: " + str(total_votes))
+print("-------------------------")
+#determine vote percentage, print it, and determine winning candidate
+for candidate in candidate_votes:
+    votes = candidate_votes[candidate]
+    vote_percentage = int(votes) / total_votes * 100
+    print(str(candidate) + ": " + str(round(vote_percentage, 3)) + "% (" + str(votes) + ")")
+    if votes > most_votes:
+        most_votes = votes
+        winner = candidate
+print("-------------------------")
+print("Winner: " + winner)
+print("-------------------------")
 
-    #determine total votes
-    total_votes = len(votes)
+#output to a text file
+file = open("Analysis/output.txt", "w")
+file.write("Election Results" + "\n")
+file.write("-------------------------" + "\n")
+file.write("Total Votes: " + str(total_votes) + "\n")
+file.write("-------------------------" + "\n")
+#determine vote percentage, output it, and determine winning candidate
+for candidate in candidate_votes:
+    votes = candidate_votes[candidate]
+    vote_percentage = int(votes) / total_votes * 100
+    file.write(str(candidate) + ": " + str(round(vote_percentage, 3)) + "% (" + str(votes) + ")" + "\n")
+    if votes > most_votes:
+        most_votes = votes
+        winner = candidate
+file.write("-------------------------" + "\n")
+file.write("Winner: " + winner + "\n")
+file.write("-------------------------")
+

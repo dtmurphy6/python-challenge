@@ -52,7 +52,7 @@ for i in range(1, len(months)):
 
 average_change = total_change / (len(months) - 1)
 
-# print output
+#print output
 print("Financial Analysis")
 print("----------------------------")
 print("Total Months: " + str(len(months)))
